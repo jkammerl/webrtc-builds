@@ -113,6 +113,11 @@ if [ $BUILD_ONLY = 0 ]; then
   patch $PLATFORM $OUTDIR $ENABLE_RTTI
 fi
 
+# Move protobuf symbols into separate namespace to avoid duplicate symbols.
+find $OUTDIR/src -type f -print0 | xargs -0 sed -i 's/namespace\ protobuf/namespace\ protobuf_webrtc/g'
+find $OUTDIR/src -type f -print0 | xargs -0 sed -i 's/protobuf::/protobuf_webrtc::/g'
+find $OUTDIR/src -type f -print0 | xargs -0 sed -i 's/protobuf_google_/protobuf_webrtc_google_/g'
+
 echo Compiling WebRTC
 compile $PLATFORM $OUTDIR "$TARGET_OS" "$TARGET_CPU" "$CONFIGS" "$BLACKLIST"
 
